@@ -1,0 +1,132 @@
+<svg width="800" height="240" viewBox="0 0 800 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#020617"/>
+      <stop offset="50%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <radialGradient id="pinkGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ec4899" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#ec4899" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="indigoGlow" cx="20%" cy="30%" r="40%">
+      <stop offset="0%" stop-color="#6366f1" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap');
+    
+    .title-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 30px;
+      fill: #f43f5e;
+      filter: drop-shadow(0 0 8px rgba(244, 63, 94, 0.5));
+    }
+    
+    .subtitle-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      fill: #a5b4fc;
+      letter-spacing: 0.35em;
+    }
+
+    .tech-pill-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      fill: #10b981;
+    }
+
+    @keyframes rotateOrbit {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes pulseParticle {
+      0%, 100% { opacity: 0.2; r: 1.5px; }
+      50% { opacity: 0.9; r: 3px; }
+    }
+
+    @keyframes slowDrift {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-10px, 15px); }
+    }
+
+    .orbit-container {
+      transform-origin: 400px 120px;
+      animation: rotateOrbit 25s infinite linear;
+    }
+
+    .drifting-stars {
+      animation: slowDrift 12s infinite ease-in-out;
+    }
+
+    .pulse-star-1 { animation: pulseParticle 3s infinite ease-in-out; }
+    .pulse-star-2 { animation: pulseParticle 4s infinite ease-in-out; animation-delay: 1.5s; }
+    .pulse-star-3 { animation: pulseParticle 5s infinite ease-in-out; animation-delay: 0.8s; }
+  </style>
+
+  <!-- Solid Background -->
+  <rect width="800" height="240" fill="url(#bgGrad)"/>
+  
+  <!-- Glowing Base Circles -->
+  <rect width="800" height="240" fill="url(#pinkGlow)"/>
+  <rect width="800" height="240" fill="url(#indigoGlow)"/>
+
+  <!-- Starry Constellation Network (Drifting) -->
+  <g class="drifting-stars" opacity="0.65">
+    <line x1="120" y1="50" x2="210" y2="90" stroke="#f43f5e" stroke-opacity="0.12" stroke-width="1"/>
+    <line x1="210" y1="90" x2="160" y2="180" stroke="#6366f1" stroke-opacity="0.12" stroke-width="1"/>
+    <line x1="680" y1="60" x2="620" y2="150" stroke="#6366f1" stroke-opacity="0.12" stroke-width="1"/>
+    <line x1="620" y1="150" x2="720" y2="190" stroke="#f43f5e" stroke-opacity="0.12" stroke-width="1"/>
+    
+    <!-- Pulse particles -->
+    <circle cx="120" cy="50" r="2" fill="#f43f5e" class="pulse-star-1"/>
+    <circle cx="210" cy="90" r="1.5" fill="#818cf8"/>
+    <circle cx="160" cy="180" r="2.5" fill="#ec4899" class="pulse-star-2"/>
+    <circle cx="680" cy="60" r="2" fill="#818cf8" class="pulse-star-3"/>
+    <circle cx="620" cy="150" r="1.5" fill="#f43f5e"/>
+    <circle cx="720" cy="190" r="2.5" fill="#ec4899" class="pulse-star-1"/>
+  </g>
+
+  <!-- Concentric Orbital Rings (Interactive Look) -->
+  <g class="orbit-container">
+    <circle cx="400" cy="120" r="140" fill="none" stroke="#6366f1" stroke-opacity="0.08" stroke-width="1" stroke-dasharray="8 8"/>
+    <circle cx="400" cy="120" r="110" fill="none" stroke="#f43f5e" stroke-opacity="0.08" stroke-width="1" stroke-dasharray="3 6"/>
+    <circle cx="400" cy="120" r="80" fill="none" stroke="#ec4899" stroke-opacity="0.05" stroke-width="0.7"/>
+    
+    <!-- Orbiting minor energy beads -->
+    <circle cx="260" cy="120" r="3" fill="#f43f5e" opacity="0.6"/>
+    <circle cx="510" cy="60" r="2" fill="#818cf8" opacity="0.5"/>
+  </g>
+
+  <!-- Central Workstation HUD Frame -->
+  <rect x="180" y="35" width="440" height="170" rx="12" fill="#020617" fill-opacity="0.75" stroke="#334155" stroke-width="1.5" stroke-opacity="0.6"/>
+  
+  <!-- Sleek corner bracket accents -->
+  <path d="M192 35H180V47" stroke="#f43f5e" stroke-width="2" stroke-linecap="round"/>
+  <path d="M608 35H620V47" stroke="#f43f5e" stroke-width="2" stroke-linecap="round"/>
+  <path d="M180 193V205H192" stroke="#6366f1" stroke-width="2" stroke-linecap="round"/>
+  <path d="M620 193V205H608" stroke="#6366f1" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Content Typography -->
+  <g transform="translate(400, 100)" text-anchor="middle">
+    <!-- Main Station Heading -->
+    <text y="-8" class="title-text">COGNITIVE SYSTEMS</text>
+    
+    <!-- Secondary Designation -->
+    <text y="24" class="subtitle-text">SECURE RADAR FOR MR. FAHAD</text>
+    
+    <!-- Dynamic Terminal Signal Badge -->
+    <g transform="translate(-115, 43)">
+      <rect width="230" height="24" rx="12" fill="#090d16" stroke="#10b981" stroke-width="1" stroke-opacity="0.3"/>
+      <circle cx="18" cy="12" r="4.5" fill="#10b981">
+        <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite" />
+      </circle>
+      <text x="32" y="16" class="tech-pill-text">SYS: ACTIVE [PORT 3000]</text>
+    </g>
+  </g>
+</svg>

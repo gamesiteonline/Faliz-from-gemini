@@ -1,0 +1,73 @@
+<svg width="550" height="110" viewBox="0 0 550 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="termGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090d16"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+  </defs>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&amp;display=swap');
+    
+    .terminal-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 15px;
+      fill: #f43f5e;
+      dominant-baseline: middle;
+    }
+
+    .cursor {
+      fill: #a5b4fc;
+      animation: blink 0.8s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+
+    /* Elegant CSS Typewriter Timeline Animation */
+    .line-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 15px;
+      fill: #f43f5e;
+      white-space: nowrap;
+      overflow: hidden;
+      display: inline-block;
+    }
+
+    @keyframes typingCycle {
+      0%, 100% { content: "&gt; INITIALIZING CORE CRAWLER..."; fill: #38bdf8; }
+      18%      { content: "&gt; INITIALIZING CORE CRAWLER..."; fill: #38bdf8; }
+      20%, 38% { content: "&gt; WELCOME, MR. FAHAD."; fill: #f43f5e; }
+      40%, 58% { content: "&gt; WEBGL 3D GALAXY RUNNING..."; fill: #818cf8; }
+      60%, 78% { content: "&gt; VOCAL AUTOMATION ARMED."; fill: #ec4899; }
+      80%, 98% { content: "&gt; DUAL-STACK AGENT ACTIVE."; fill: #10b981; }
+    }
+
+    .animated-content::after {
+      content: "&gt; SECURING STATION FEED...";
+      animation: typingCycle 15s infinite steps(1);
+    }
+  </style>
+
+  <!-- Solid Dark Shell Card -->
+  <rect width="550" height="110" rx="10" fill="url(#termGrad)" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Command Window Minimal Header (Mac style control buttons) -->
+  <circle cx="24" cy="20" r="5" fill="#ef4444"/>
+  <circle cx="40" cy="20" r="5" fill="#f59e0b"/>
+  <circle cx="56" cy="20" r="5" fill="#10b981"/>
+  
+  <text x="524" y="22" font-family="'JetBrains Mono', monospace" font-size="10" fill="#475569" text-anchor="end">SYS_HUD.sh</text>
+  <line x1="12" y1="36" x2="538" y2="36" stroke="#1e293b" stroke-width="1"/>
+
+  <!-- Animated Typed Command -->
+  <g transform="translate(24, 68)">
+    <text x="0" y="0" class="terminal-text animated-content" />
+    <!-- Dynamic flashing Terminal cursor positioned securely -->
+    <rect x="290" y="-12" width="8" height="16" class="cursor"/>
+  </g>
+</svg>

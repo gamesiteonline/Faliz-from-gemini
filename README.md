@@ -1,39 +1,32 @@
 # 🌌 CORE WORKSPACE INTELLIGENCE & INTERACTIVE GALAXY COSMOS
 
 <p align="center">
-  <img src="https://svg-banners.vercel.app/api?type=glitch&text=COGNITIVE%20SYSTEMS&subtitle=SECURE%20TERMINAL%20FOR%20MR.%20FAHAD&theme=dark&width=800&height=220" alt="Cognitive Systems Banner" />
+  <!-- Gorgeous local CSS-Animated Banner -->
+  <img src="assets/banner.svg" alt="Cognitive Systems Workspace Banner" width="100%" />
 </p>
 
 <p align="center">
-  <!-- Typing Effect SVG -->
-  <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=19&duration=3000&pause=1000&color=F43F5E&center=true&vCenter=true&width=550&lines=CORE+INTELLIGENCE+ONLINE;GREETINGS+MR.+FAHAD;WEBGL+3D+FILE+GALAXY+ACTIVE;🎙️+MALE+VOCAL+SYNTHESIS+ALIGNED;⚡+HIERARCHICAL+FALLBACK+READY" alt="Dynamic Status typing" />
-  </a>
+  <!-- Safe Self-Contained Local Typing Animation -->
+  <img src="assets/typing.svg" alt="System Status Typist Engine" width="75%" />
 </p>
 
 <p align="center">
-  <!-- Interactive custom technology badges -->
-  <img src="https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=node.js&logoColor=white" />
-  <img src="https://img.shields.io/badge/React%2018-Vite%205-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
-  <img src="https://img.shields.io/badge/Three.js-WebGL-000000?style=for-the-badge&logo=three.js&logoColor=white" />
-  <img src="https://img.shields.io/badge/Python%203-Flask%20WSGI-3776AB?style=for-the-badge&logo=python&logoColor=white" />
-  <img src="https://img.shields.io/badge/Gemini%20Flash-3.5%20Pro-f43f5e?style=for-the-badge&logo=google-gemini&logoColor=white" />
-</p>
-
-<p align="center">
-  <!-- Active Dynamic Visitor Counter Badge -->
-  <img src="https://komarev.com/normal-badge/?username=fahadgroyne&color=f43f5e&style=flat-square&label=STATION+ACCESS_COUNT" alt="Interactive Visitor Counter" />
+  <!-- Bulletproof, high-contrast structural shields.io badges -->
+  <img src="https://img.shields.io/badge/Workspace-Secured_Node_v18-818cf8?style=flat-square" />
+  <img src="https://img.shields.io/badge/Role%20Authentication-MR._FAHAD-f43f5e?style=flat-square" />
+  <img src="https://img.shields.io/badge/Voice%20Synthesis-ACTIVE_BARITONE-ec4899?style=flat-square" />
+  <img src="https://img.shields.io/badge/Dual--Stack-Express%20%2B%20Python-10b981?style=flat-square" />
 </p>
 
 ---
 
-## 📖 System Introduction
+## 📖 Cockpit Introduction
 
-Welcome, **Fahad**. This is your customized, high-fidelity workstation and cognitive file analyst companion. Featuring a beautiful interactive WebGL stardust galaxy that binds to your local file tree directories dynamically using **Three.js** and high-contrast ambient layout controls.
+Welcome, **Fahad**. This is your exclusive, high-fidelity technical workstation catalog and cognitive file auditor. Featuring a beautiful interactive **WebGL stardust galaxy** that binds to your local file tree directories dynamically using **Three.js** and ambient layout controls.
 
-The cockpit includes a premium **Voice-Activated Interaction Suite**:
-*   🎙️ **Natural Speech Capture** via local speech recognition to translate your audio instructions instantly into code queries.
-*   🔊 **Baritone Vocalizer** executing on a refined mathematical pitch system. It reads all server analytical responses back in a deep, clean male voice, prefixing context and custom engineering alerts directly to you, **Sir**.
+The workspace is pre-aligned with a premium **Voice-Activated Interaction Suite**:
+*   🎙️ **Natural Speech Capture** via local speech recognition to translate your spoken commands instantly into markdown queries.
+*   🔊 **Baritone Vocalizer** executing on a refined mathematical pitch system. It reads all server analytical responses back in a deep, clean male voice, prefixing security context alerts directly to you, **Sir**.
 
 ---
 
@@ -46,13 +39,13 @@ The cockpit includes a premium **Voice-Activated Interaction Suite**:
 
 ---
 
-## 📊 Mr. Fahad's Activity Dashboard
+## 📊 Cognitive Performance Workspace
 
 <p align="center">
-  <!-- Animated SVG GitHub Stats showing with high-contrast theme -->
-  <img src="https://github-readme-stats.vercel.app/api?username=fahadgroyne&show_icons=true&theme=nord&bg_color=0f172a&title_color=f43f5e&icon_color=818cf8&text_color=94a3b8&border_color=334155" alt="Fahad's GitHub Analytical Stats Grid" width="48%" />
-  <!-- GitHub 3D Contribution Graph mockup / alternate live dynamic tool -->
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=fahadgroyne&layout=compact&theme=nord&bg_color=0f172a&title_color=f43f5e&icon_color=818cf8&text_color=94a3b8&border_color=334155" alt="Fahad's Core Language Vectors" width="48%" />
+  <!-- Static fully-formed badges with gorgeous high-performance indicators -->
+  <img src="https://img.shields.io/badge/AI%20Pipeline-Gemini%20Flash%203.5-f43f5e?style=for-the-badge&logo=google-gemini&logoColor=white" />
+  <img src="https://img.shields.io/badge/Framework-React%2018%20%2B%20Vite%25A-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
+  <img src="https://img.shields.io/badge/3D%20Rendering-WebGL_Three.js-000000?style=for-the-badge&logo=three.js&logoColor=white" />
 </p>
 
 ---
@@ -60,7 +53,8 @@ The cockpit includes a premium **Voice-Activated Interaction Suite**:
 ## 🎵 Cosmic Workspace Lounge (Currently Streaming)
 
 <p align="center">
-  <img src="https://api.retro-widget.com/api?user=retro&layout=dark&theme=rose" alt="Fahad's Spatial Station Feed" />
+  <!-- Beautiful local animated music stream visualizer -->
+  <img src="assets/equalizer.svg" alt="Equalizer stream feed" width="100%" />
 </p>
 
 ---
@@ -131,7 +125,7 @@ The backend Flask server (`app.py`) serves pre-compiled and optimized React comp
 <summary>📦 Step 2: Packaging the Archive</summary>
 
 To easily upload your complete codebase to PythonAnywhere:
-1. ...Compress your workspace directory into a unified `.zip` archive file. 
+1. Compress your workspace directory into a unified `.zip` archive file. 
 2. Ensure you package the following files:
    * `/dist`
    * `app.py`
