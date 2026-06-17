@@ -1,52 +1,7 @@
 # 🌌 CORE WORKSPACE INTELLIGENCE & INTERACTIVE GALAXY COSMOS
 
 <p align="center">
-  <!-- Glowing CSS-Animated Banner -->
-  <svg width="100%" height="200" viewBox="0 0 800 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <style>
-      .title { font: bold 32px 'Space Grotesk', 'Inter', sans-serif; fill: #f43f5e; filter: drop-shadow(0 0 12px rgba(244,63,94,0.6)); }
-      .subtitle { font: 500 16px 'JetBrains Mono', monospace; fill: #818cf8; letter-spacing: 0.35em; }
-      .status { font: 500 12px 'JetBrains Mono', monospace; fill: #10b981; }
-      @keyframes pulse {
-        0% { opacity: 0.3; }
-        50% { opacity: 0.82; }
-        100% { opacity: 0.3; }
-      }
-      @keyframes drift {
-        0% { transform: translateY(0px) rotate(0deg); }
-        50% { transform: translateY(-10px) rotate(3deg); }
-        100% { transform: translateY(0px) rotate(0deg); }
-      }
-      .particle { animation: pulse 4s infinite ease-in-out; }
-      .glow-layer { animation: drift 10s infinite ease-in-out; }
-    </style>
-    <!-- Background Gradient -->
-    <rect width="100%" height="100%" fill="#020617"/>
-    <defs>
-      <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#3b0764" stop-opacity="0.6"/>
-        <stop offset="100%" stop-color="#020617" stop-opacity="1"/>
-      </radialGradient>
-    </defs>
-    <rect width="100%" height="105%" fill="url(#bgGlow)"/>
-    
-    <!-- Vector Stars Grid -->
-    <g class="glow-layer">
-      <circle cx="100" cy="50" r="1.5" fill="#f43f5e" class="particle"/>
-      <circle cx="700" cy="150" r="2.5" fill="#818cf8" class="particle" style="animation-delay: 1.5s;"/>
-      <circle cx="250" cy="120" r="1" fill="#ffffff" class="particle" style="animation-delay: 2s;"/>
-      <circle cx="600" cy="70" r="2" fill="#ec4899" class="particle" style="animation-delay: 0.5s;"/>
-    </g>
-
-    <!-- Glowing Vector Spheres representing Orbit Nodes -->
-    <circle cx="400" cy="100" r="45" fill="none" stroke="#f43f5e" stroke-width="0.5" stroke-dasharray="3 6" opacity="0.4"/>
-    <circle cx="400" cy="100" r="75" fill="none" stroke="#818cf8" stroke-width="0.5" stroke-dasharray="5 10" opacity="0.3"/>
-
-    <!-- Central Branding Info -->
-    <text x="50%" y="45%" dominant-baseline="middle" text-anchor="middle" class="title">COGNITIVE SYSTEMS WORKSPACE</text>
-    <text x="50%" y="67%" dominant-baseline="middle" text-anchor="middle" class="subtitle">SECURE TERMINAL FOR MR. FAHAD</text>
-    <text x="50%" y="85%" dominant-baseline="middle" text-anchor="middle" class="status">🟢 ONLINE - DUAL-STACK WEB ENGINE ACTIVE</text>
-  </svg>
+  <img src="https://svg-banners.vercel.app/api?type=glitch&text=COGNITIVE%20SYSTEMS&subtitle=SECURE%20TERMINAL%20FOR%20MR.%20FAHAD&theme=dark&width=800&height=220" alt="Cognitive Systems Banner" />
 </p>
 
 <p align="center">
@@ -82,11 +37,11 @@ The cockpit includes a premium **Voice-Activated Interaction Suite**:
 
 ---
 
-## ⚡ Live Status Indicators
+## ⚡ Station Telemetry & Status Indicators
 
 ```text
  🛡️ INTEGRITY: SECURE       📡 NET: CONTAINER INGRESS [PORT 3000]       🎙️ AUDIO CHANNEL: READY
- 👤 HOST IDENTIFIER: FAHAD  🧬 PLATFORM Core: HYBRID TS/PYTHON ANYWHERE   ⚙️ BACKEND COGNITION: OPERATIONAL
+ 👤 HOST IDENTIFIER: FAHAD  🧬 PLATFORM CORE: HYBRID TS/PYTHON ANYWHERE  ⚙️ BACKEND COGNITION: OPERATIONAL
 ```
 
 ---
@@ -105,34 +60,7 @@ The cockpit includes a premium **Voice-Activated Interaction Suite**:
 ## 🎵 Cosmic Workspace Lounge (Currently Streaming)
 
 <p align="center">
-  <!-- Dynamic Now Playing Music Widget simulating beautiful interactive graphic equalizer -->
-  <svg width="600" height="80" viewBox="0 0 600 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect width="100%" height="100%" rx="10" fill="#090d16" stroke="#22d3ee" stroke-opacity="0.15" stroke-width="1.5"/>
-    <!-- Animated soundwaves -->
-    <style>
-      @keyframes bounce-low { 0%, 100% { height: 10px; } 50% { height: 35px; } }
-      @keyframes bounce-mid { 0%, 100% { height: 15px; } 50% { height: 45px; } }
-      @keyframes bounce-high { 0%, 100% { height: 8px; } 50% { height: 55px; } }
-      .bar { fill: #f43f5e; width: 3px; rx: 1.5; transform-origin: bottom; }
-    </style>
-    <!-- Album Mockup Icon -->
-    <circle cx="45" cy="40" r="22" fill="#1e1b4b"/>
-    <path d="M40 30L52 35L40 40V30Z" fill="#f43f5e"/>
-    
-    <!-- Title details -->
-    <text x="85" y="38" font-family="'Space Grotesk', system-ui" font-weight="bold" font-size="14" fill="#f1f5f9">Stardust Synth-Wave Beats - Active Coding Session</text>
-    <text x="85" y="55" font-family="'JetBrains Mono', monospace" font-size="11" fill="#818cf8">🔉 Fahad's Spatial Station Feed (Synced)</text>
-    
-    <!-- Interactive Vector Equalizer Graphic -->
-    <g transform="translate(500, 15)">
-      <rect x="0" y="45" class="bar" style="animation: bounce-low 0.9s infinite alternate;"/>
-      <rect x="6" y="45" class="bar" style="animation: bounce-high 1.2s infinite alternate;"/>
-      <rect x="12" y="45" class="bar" style="animation: bounce-mid 0.8s infinite alternate;"/>
-      <rect x="18" y="45" class="bar" style="animation: bounce-low 1.1s infinite alternate;"/>
-      <rect x="24" y="45" class="bar" style="animation: bounce-high 1.0s infinite alternate;"/>
-      <rect x="30" y="45" class="bar" style="animation: bounce-mid 0.7s infinite alternate;"/>
-    </g>
-  </svg>
+  <img src="https://api.retro-widget.com/api?user=retro&layout=dark&theme=rose" alt="Fahad's Spatial Station Feed" />
 </p>
 
 ---
@@ -203,7 +131,7 @@ The backend Flask server (`app.py`) serves pre-compiled and optimized React comp
 <summary>📦 Step 2: Packaging the Archive</summary>
 
 To easily upload your complete codebase to PythonAnywhere:
-1. Compress your workspace directory into a unified `.zip` archive file. 
+1. ...Compress your workspace directory into a unified `.zip` archive file. 
 2. Ensure you package the following files:
    * `/dist`
    * `app.py`
