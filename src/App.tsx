@@ -16,7 +16,15 @@ import {
   RefreshCw,
   FolderTree,
   Sparkles,
-  Info
+  Info,
+  MessageSquareCode,
+  Send,
+  Globe,
+  User,
+  Mic,
+  MicOff,
+  Volume2,
+  VolumeX
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import JSZip from "jszip";
@@ -35,8 +43,243 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
-  // Tab states: "inspect" or "three3d"
-  const [activeTab, setActiveTab] = useState<"inspect" | "three3d">("inspect");
+  // Tab states: "inspect", "three3d" or "chat"
+  const [activeTab, setActiveTab] = useState<"inspect" | "three3d" | "chat">("inspect");
+
+  // AI Chat states
+  interface Message {
+    role: "user" | "assistant";
+    content: string;
+    groundedSources?: Array<{ title?: string; uri?: string }>;
+    modelUsed?: string;
+  }
+
+  // Voice controls & voice synthesis state values
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const [isListening, setIsListening] = useState(false);
+
+  // Pre-load synthesis voices
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.getVoices();
+    }
+  }, []);
+
+  // Helper function to synthesize text using a masculine baritone voice
+  const speakText = (text: string) => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+
+    // Discard any current voice readout
+    window.speechSynthesis.cancel();
+
+    // Sanitize Markdown syntax from readout
+    const cleanText = text
+      .replace(/```[\s\S]*?```/g, " [Code Block Snippet] ")
+      .replace(/\*\*([^*]+)\*\*/g, "$1")
+      .replace(/`([^`]+)`/g, "$1")
+      .replace(/[#_*~|]/g, " ")
+      .trim();
+
+    if (!cleanText) return;
+
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    const voices = window.speechSynthesis.getVoices();
+
+    // Look for male, UK, micro, or standard english voices with male tags
+    let matchedVoice = voices.find(v => {
+      const name = v.name.toLowerCase();
+      return (
+        name.includes("male") ||
+        name.includes("david") ||
+        name.includes("george") ||
+        name.includes("uk english male") ||
+        name.includes("microsoft david") ||
+        (name.includes("google") && name.includes("english") && !name.includes("female"))
+      );
+    });
+
+    if (!matchedVoice) {
+      matchedVoice = voices.find(v => v.lang.startsWith("en-"));
+    }
+
+    if (matchedVoice) {
+      utterance.voice = matchedVoice;
+    }
+
+    // Sound more baritone and premium (lowered pitch slightly)
+    utterance.pitch = 0.82;
+    utterance.rate = 1.05;
+
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const toggleSpeechRecognition = () => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Microphone recognition is not fully supported in this browser environment. Please run in chrome or safari for best outcomes!");
+      return;
+    }
+
+    if (isListening) {
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      setIsListening(true);
+    };
+
+    recognition.onerror = (e: any) => {
+      console.error("Speech Recognition Error:", e.error);
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognition.onresult = (event: any) => {
+      const textResult = event.results[0][0].transcript;
+      if (textResult) {
+        setChatInput(prev => prev ? prev + " " + textResult : textResult);
+      }
+    };
+
+    recognition.start();
+  };
+
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: "assistant",
+      content: `Greetings, **Fahad**. All systems are fully active and pre-aligned.
+
+I have completed scanning your workspace files. Feel free to:
+- Ask me to **analyze algorithms** or perform a **quality and security audit** of any component.
+- Ask for complex refactoring advice or custom full-stack solutions.
+- Engage **Google Search Grounding** for real-time web references and API syntax.
+
+I am entirely at your disposal, Sir. Let me know what we are building.`,
+      modelUsed: "Core Workspace Engine"
+    }
+  ]);
+  const [chatInput, setChatInput] = useState("");
+  const [chatLoading, setChatLoading] = useState(false);
+  const [chatError, setChatError] = useState<string | null>(null);
+
+  const sendChatMessage = async (overridePrompt?: string) => {
+    const promptToSend = (overridePrompt || chatInput).trim();
+    if (!promptToSend) return;
+
+    const userMessage: Message = { role: "user", content: promptToSend };
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
+    if (!overridePrompt) {
+      setChatInput("");
+    }
+    setChatLoading(true);
+    setChatError(null);
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          messages: updatedMessages,
+          selectedFilePath: selectedPath
+        })
+      });
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error || "Failed to communicate with workspace companion.");
+      }
+
+      const data = await response.json();
+      
+      // Parse search grounding citations if available
+      let groundedSources: any[] = [];
+      if (data.groundingMetadata?.groundingChunks) {
+        groundedSources = data.groundingMetadata.groundingChunks
+          .map((chunk: any) => ({
+            title: chunk.web?.title || chunk.web?.uri || "Search Reference",
+            uri: chunk.web?.uri
+          }))
+          .filter((s: any) => s.uri);
+      }
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: data.text,
+          groundedSources: groundedSources.length > 0 ? groundedSources : undefined,
+          modelUsed: data.modelUsed
+        }
+      ]);
+
+      if (voiceEnabled) {
+        speakText(data.text);
+      }
+    } catch (err: any) {
+      console.error(err);
+      setChatError(err.message || "An unexpected error occurred contacting the Gemini brain.");
+    } finally {
+      setChatLoading(false);
+    }
+  };
+
+  const renderMessageContent = (content: string) => {
+    const parts = content.split(/(```[\s\S]*?```)/g);
+    return parts.map((part, index) => {
+      if (part.startsWith("```")) {
+        const match = part.match(/```(\w*)\n([\s\S]*?)```/);
+        const language = match ? match[1] : "code";
+        const code = match ? match[2] : part.slice(3, -3);
+        return (
+          <div key={index} className="my-3 bg-slate-900 border border-slate-800 rounded-lg overflow-hidden text-xs font-mono shadow-inner shadow-black/40">
+            <div className="bg-slate-950 px-4 py-1.5 flex justify-between items-center text-[10px] text-slate-500 font-sans border-b border-slate-800/80">
+              <span className="font-semibold tracking-wider text-cyan-400 capitalize">{language || "Code"} Block</span>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(code);
+                }}
+                className="hover:text-cyan-300 font-sans transition-colors cursor-pointer flex items-center space-x-1"
+                title="Copy snippet"
+              >
+                <Copy className="w-3.5 h-3.5" />
+                <span>Copy</span>
+              </button>
+            </div>
+            <pre className="p-4 overflow-x-auto text-[13px] text-cyan-200/95 leading-relaxed whitespace-pre select-all max-h-[400px]">{code}</pre>
+          </div>
+        );
+      } else {
+        return (
+          <div key={index} className="space-y-1.5 leading-relaxed">
+            {part.split("\n").map((line, lIdx) => {
+              const boldParts = line.split(/(\*\*.*?\*\*)/g);
+              return (
+                <p key={lIdx} className="text-[13px] text-slate-200">
+                  {boldParts.map((bp, bpIdx) => {
+                    if (bp.startsWith("**") && bp.endsWith("**")) {
+                      return <strong key={bpIdx} className="text-cyan-300 font-bold bg-cyan-900/10 px-1 py-0.5 rounded text-[12px]">{bp.slice(2, -2)}</strong>;
+                    }
+                    return bp;
+                  })}
+                </p>
+              );
+            })}
+          </div>
+        );
+      }
+    });
+  };
 
   // UI states
   const [copiedPath, setCopiedPath] = useState(false);
@@ -518,8 +761,8 @@ export default function App() {
             <section className="flex-1 flex flex-col overflow-hidden bg-slate-950/20" id="faliz-ai-details">
               
               {/* TABS SELECTOR BOARD */}
-              <div className="bg-slate-950 border-b border-slate-900 px-4 py-2 flex items-center justify-between shrink-0">
-                <div className="flex items-center space-x-2">
+              <div className="bg-slate-950 border-b border-slate-900 px-4 py-3 flex items-center justify-between shrink-0">
+                <div className="flex items-center space-x-2 flex-wrap gap-1">
                   <button
                     onClick={() => setActiveTab("inspect")}
                     className={`px-3 py-1.5 rounded-md text-xs font-semibold flex items-center space-x-1.5 transition-all cursor-pointer ${
@@ -529,7 +772,7 @@ export default function App() {
                     }`}
                   >
                     <FileCode className="w-3.5 h-3.5" />
-                    <span>Raw Code view ({selectedPath.split('/').pop() || "None"})</span>
+                    <span>Raw Code View ({selectedPath.split('/').pop() || "None"})</span>
                   </button>
                   
                   <button
@@ -540,18 +783,250 @@ export default function App() {
                         : "text-slate-400 hover:text-cyan-400"
                     }`}
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
                     <Cpu className="w-3.5 h-3.5" />
-                    <span>Interactive 3D Galaxy Tree</span>
+                    <span>3D Galaxy Tree</span>
+                  </button>
+
+                  <button
+                    onClick={() => setActiveTab("chat")}
+                    className={`px-4 py-1.5 rounded-md text-xs font-semibold flex items-center space-x-2 transition-all cursor-pointer relative ${
+                      activeTab === "chat"
+                        ? "bg-slate-900 text-pink-300 shadow-sm border border-pink-900/50"
+                        : "text-slate-400 hover:text-pink-400"
+                    }`}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse" />
+                    <MessageSquareCode className="w-3.5 h-3.5" />
+                    <span>AI Code Chatbot</span>
                   </button>
                 </div>
                 
                 <div className="text-[10px] text-slate-500 hidden sm:block">
-                  Click nodes in 3D scene to open target file instantly.
+                  Click tree nodes or prompt Gemini Live Context
                 </div>
               </div>
 
-              {activeTab === "three3d" ? (
+              {activeTab === "chat" ? (
+                // CHAT CONSOLE
+                <div className="flex-1 flex flex-col overflow-hidden bg-slate-950 divide-y divide-slate-900" id="ai-chat-console">
+                  
+                  {/* SCROLLABLE CHAT FEED */}
+                  <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4">
+                    {messages.map((msg, idx) => {
+                      const isAss = msg.role === "assistant";
+                      return (
+                        <div 
+                          key={idx} 
+                          className={`flex items-start space-x-3 max-w-4xl ${
+                            isAss ? "mr-12" : "ml-auto mr-0 flex-row-reverse space-x-reverse max-w-2xl"
+                          }`}
+                        >
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                            isAss 
+                              ? "bg-gradient-to-tr from-pink-500 to-indigo-600 shadow shadow-indigo-500/20" 
+                              : "bg-slate-800"
+                          }`}>
+                            {isAss ? (
+                              <Sparkles className="w-4 h-4 text-white" />
+                            ) : (
+                              <User className="w-4 h-4 text-slate-300" />
+                            )}
+                          </div>
+                          
+                          <div className={`p-4 rounded-xl text-xs space-y-2 leading-relaxed ${
+                            isAss 
+                              ? "bg-slate-900/60 border border-slate-900/80 text-slate-100 shadow-sm" 
+                              : "bg-pink-600/10 border border-pink-500/10 text-pink-100 shadow-md shadow-pink-950/5"
+                          }`}>
+                            <div className="font-semibold text-[10px] font-mono tracking-wider uppercase text-slate-500 flex items-center justify-between w-full mb-1 select-none">
+                              <div className="flex items-center space-x-1.5">
+                                <span>{isAss ? "FALIZ AI PRO" : "YOU (Workspace owner)"}</span>
+                                {isAss && (
+                                  <span className="bg-pink-500/10 text-pink-400 font-bold px-1.5 py-0.5 rounded text-[9px] uppercase border border-pink-500/20 tracking-wider">
+                                    {msg.modelUsed || "Gemini Fallback"}
+                                  </span>
+                                )}
+                              </div>
+                              {isAss && (
+                                <button
+                                  type="button"
+                                  onClick={() => speakText(msg.content)}
+                                  className="flex items-center space-x-1 text-pink-400 hover:text-pink-300 transition-colors uppercase font-bold text-[9px] border border-pink-500/25 bg-pink-500/5 px-1.5 py-0.5 rounded cursor-pointer"
+                                  title="Speak response"
+                                >
+                                  <Volume2 className="w-3 h-3" />
+                                  <span>Vocalize</span>
+                                </button>
+                              )}
+                            </div>
+
+                            <div className="font-sans text-[13px] leading-relaxed">
+                              {renderMessageContent(msg.content)}
+                            </div>
+
+                            {/* SEARCH GROUNDING SOURCE LINK REFERENCES */}
+                            {msg.groundedSources && (
+                              <div className="mt-3 pt-3 border-t border-slate-800/60 text-[11px] font-sans space-y-1 text-slate-400">
+                                <div className="flex items-center space-x-1 text-cyan-400 font-medium">
+                                  <Globe className="w-3 h-3" />
+                                  <span>Google Grounded Citations:</span>
+                                </div>
+                                <div className="flex flex-wrap gap-1.5 mt-1">
+                                  {msg.groundedSources.map((src, sIdx) => (
+                                    <a 
+                                      key={sIdx} 
+                                      href={src.uri} 
+                                      target="_blank" 
+                                      rel="noreferrer" 
+                                      className="bg-slate-900 hover:bg-slate-850 border border-slate-800 px-2 py-0.5 rounded text-[10px] text-cyan-300 transition-all flex items-center space-x-1 shrink-0"
+                                    >
+                                      <span className="truncate max-w-[150px]">{src.title}</span>
+                                    </a>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {chatLoading && (
+                      <div className="flex items-start space-x-3 max-w-4xl">
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-pink-500 to-indigo-600 flex items-center justify-center animate-pulse">
+                          <Sparkles className="w-4 h-4 text-white animate-spin" />
+                        </div>
+                        <div className="p-4 bg-slate-900/40 border border-slate-900 rounded-xl">
+                          <div className="flex items-center space-x-2 text-xs font-mono text-slate-400">
+                            <span className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-ping" />
+                            <span>Thinking, searching Web sources, and reviewing files context...</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {chatError && (
+                      <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-xs text-red-400 font-mono">
+                        Error: {chatError}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* QUICK CONTEXT TAG / STARTERS */}
+                  <div className="px-6 py-2.5 bg-slate-950/80 shrink-0 select-none">
+                    <p className="text-[10px] text-slate-500 font-mono mb-2 uppercase tracking-wide">Quick Action Starters (Reviews active workspace context)</p>
+                    <div className="flex gap-2 flex-wrap text-[11px] font-sans">
+                      <button 
+                        disabled={chatLoading}
+                        onClick={() => sendChatMessage("Analyze the architecture of the loaded files and write a 2-sentence summary of standard entries.")}
+                        className="bg-slate-900 hover:bg-slate-800 hover:border-pink-500/40 border border-slate-800 text-slate-300 px-2.5 py-1 rounded transition-all cursor-pointer disabled:opacity-40 text-xs"
+                      >
+                        Codebase Overview 📁
+                      </button>
+                      <button 
+                        disabled={chatLoading || !selectedPath}
+                        onClick={() => sendChatMessage(`Conduct a thorough security review of high priority lines inside file: "${selectedPath}" and propose optimizations if any.`)}
+                        className="bg-slate-900 hover:bg-slate-800 hover:border-pink-500/40 border border-slate-800 text-slate-300 px-2.5 py-1 rounded transition-all cursor-pointer disabled:opacity-40 text-xs"
+                      >
+                        File Security Audit 🛡️
+                      </button>
+                      <button 
+                        disabled={chatLoading}
+                        onClick={() => sendChatMessage("How do I integrate a Firestore backend to track activity logs in this Express server? Show code snippets.")}
+                        className="bg-slate-900 hover:bg-slate-800 hover:border-pink-500/40 border border-slate-800 text-slate-300 px-2.5 py-1 rounded transition-all cursor-pointer disabled:opacity-40 text-xs"
+                      >
+                        Durable Firestore Integrator 🗄️
+                      </button>
+                      <button 
+                        disabled={chatLoading}
+                        onClick={() => sendChatMessage("Give me a step-by-step checklist on how to configure and deploy this complete project on PythonAnywhere.com.")}
+                        className="bg-slate-900 hover:bg-slate-800 hover:border-pink-500/40 border border-slate-800 text-slate-300 px-2.5 py-1 rounded transition-all cursor-pointer disabled:opacity-40 text-xs"
+                      >
+                        PythonAnywhere deployment guide 🐍
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* CHAT INPUT PANEL */}
+                  <div className="p-4 bg-slate-950 border-t border-slate-900 shrink-0">
+                    <form 
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        sendChatMessage();
+                      }}
+                      className="flex space-x-2 items-center"
+                    >
+                      {/* VOICE READOUT SYNTHESIS CONTROLLER */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const nextVal = !voiceEnabled;
+                          setVoiceEnabled(nextVal);
+                          if (!nextVal && typeof window !== "undefined" && window.speechSynthesis) {
+                            window.speechSynthesis.cancel();
+                          }
+                        }}
+                        className={`p-2.5 rounded-lg border transition-all cursor-pointer flex items-center justify-center shrink-0 ${
+                          voiceEnabled 
+                            ? "bg-slate-900 text-pink-400 border-pink-500/20 hover:border-pink-500/40" 
+                            : "bg-slate-950 text-slate-500 border-slate-800 hover:text-slate-400"
+                        }`}
+                        title={voiceEnabled ? "Mute automatic voice synth" : "Unmute automatic voice synth (Male speech)"}
+                      >
+                        {voiceEnabled ? (
+                          <Volume2 className="w-4 h-4 text-pink-400" />
+                        ) : (
+                          <VolumeX className="w-4 h-4 text-slate-500" />
+                        )}
+                      </button>
+
+                      {/* MICROPHONE CAPTURING CAPABILITY */}
+                      <button
+                        type="button"
+                        onClick={toggleSpeechRecognition}
+                        className={`p-2.5 rounded-lg border transition-all cursor-pointer flex items-center justify-center shrink-0 relative ${
+                          isListening 
+                            ? "bg-red-500/15 text-red-400 border-red-500/40 animate-pulse" 
+                            : "bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-purple-400"
+                        }`}
+                        title={isListening ? "Listening active... Speak now" : "Speak to write response (Speech recognition)"}
+                      >
+                        {isListening ? (
+                          <>
+                            <span className="absolute -top-1 -right-1 flex h-2 w-2">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                            </span>
+                            <Mic className="w-4 h-4 text-red-400" />
+                          </>
+                        ) : (
+                          <Mic className="w-4 h-4" />
+                        )}
+                      </button>
+
+                      <input 
+                        type="text"
+                        value={chatInput}
+                        onChange={(e) => setChatInput(e.target.value)}
+                        placeholder={selectedPath ? `Ask something about "${selectedPath.split('/').pop()}" (e.g., explain, adapt, or audit)...` : "Type or speak a query (Recognizes you as Fahad)..."}
+                        className="flex-1 bg-slate-900 border border-slate-800 focus:border-pink-500/50 rounded-lg px-4 py-2.5 text-xs font-sans placeholder-slate-500 text-slate-100 focus:outline-none focus:ring-1 focus:ring-pink-500/30 transition-all"
+                        disabled={chatLoading}
+                      />
+                      <button
+                        type="submit"
+                        disabled={chatLoading || !chatInput.trim()}
+                        className="px-4 py-2.5 bg-gradient-to-r from-pink-500 to-indigo-600 hover:from-pink-400 hover:to-indigo-500 text-white rounded-lg flex items-center space-x-1.5 transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0"
+                        title="Send Message"
+                      >
+                        <Send className="w-3.5 h-3.5" />
+                        <span className="hidden sm:inline font-semibold text-xs">Send</span>
+                      </button>
+                    </form>
+                  </div>
+
+                </div>
+              ) : activeTab === "three3d" ? (
                 // THREEJS 3D TREE SYSTEM RENDER WINDOW
                 <div className="flex-1 p-4 bg-slate-950 overflow-hidden flex flex-col">
                   <ThreeTree 
